@@ -2,6 +2,7 @@ import React from "react";
 import { Loading, Card, Icon, Tag } from "element-react";
 import { Connect } from "aws-amplify-react";
 import { listMarkets } from "../graphql/queries";
+import { onCreateMarket } from "../graphql/subscriptions";
 import { graphqlOperation } from "aws-amplify";
 import Error from "./Error";
 import { Link } from "react-router-dom";
@@ -9,8 +10,22 @@ import CartLogo from "../assets/shopping-cart.svg";
 import MarketLogo from "../assets/market.svg";
 
 const MarketList = () => {
+  const onNewMarket = (prevQuery, newData) => {
+    let updatedQuery = { ...prevQuery }; // copy previous list
+    const updatedMarketList = [
+      newData.onCreateMarket, // newly created market
+      ...prevQuery.listMarkets.items, // add the old markets
+    ];
+    updatedQuery.listMarkets.items = updatedMarketList; // update markets
+    return updatedQuery;
+  };
+
   return (
-    <Connect query={graphqlOperation(listMarkets)}>
+    <Connect
+      query={graphqlOperation(listMarkets)}
+      subscription={graphqlOperation(onCreateMarket)}
+      onSubscriptionMsg={onNewMarket}
+    >
       {({ data, loading, errors }) => {
         if (errors.length > 0) return <Error errors={errors} />;
 
@@ -34,7 +49,7 @@ const MarketList = () => {
                   <div>
                     <span className="flex">
                       <Link className="link" to={`/markets/${market.id}`}>
-                        {market.id}
+                        {market.name}
                       </Link>
                       <span style={{ color: "var(--darkAmazonOrange)" }}>
                         {/* {market.products.items.length} */}
