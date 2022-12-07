@@ -266,6 +266,10 @@ body {
   margin-right: 5px;
 }
 
+.shipping-icon {
+  height: 20px;
+}
+
 .large-icon {
   height: 30px;
   margin-right: 2px;

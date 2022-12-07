@@ -5,12 +5,40 @@ import {
   onUpdateProduct,
   onDeleteProduct,
 } from "../graphql/subscriptions";
-import { getMarket } from "../graphql/queries";
+// import { getMarket } from "../graphql/queries";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { Link } from "react-router-dom";
 import NewProduct from "../components/NewProduct";
 import Product from "../components/Product";
 import { updateProduct } from "../graphql/mutations";
+
+const getMarket = /* GraphQL */ `
+  query GetMarket($id: ID!) {
+    getMarket(id: $id) {
+      id
+      name
+      products {
+        items {
+          id
+          description
+          price
+          shipped
+          owner
+          file {
+            key
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
 const MarketPage = ({ user, marketId }) => {
   const [market, setMarket] = useState(null);
