@@ -14,7 +14,7 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    console.log(AmplifyTheme);
+    // console.log(AmplifyTheme);
     getUserData();
     // Hub.listen("auth", this, "onHubCapsule")
   }, []);
@@ -46,6 +46,7 @@ const App = () => {
   }, []);
 
   const handleSignout = async () => {
+    console.log("Signing out");
     try {
       await Auth.signOut();
     } catch (error) {

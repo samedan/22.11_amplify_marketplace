@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Menu as Nav, Icon, Button, Loading } from "element-react";
 import { NavLink } from "react-router-dom";
 import ReactLogo from "../assets/market.svg";
+import { Auth } from "aws-amplify";
 
 const Navbar = ({ user, handleSignOut }) => {
+  // console.log(handleSignOut);
   const [isLoading, setIsLoading] = useState(true);
   const [userEmail, setUserEmail] = useState("");
 
@@ -16,6 +18,17 @@ const Navbar = ({ user, handleSignOut }) => {
       setIsLoading(false);
     }
   }, []);
+
+  const handleSignOutHere = async (e) => {
+    e.preventDefault();
+    console.log("Sign out");
+
+    try {
+      await Auth.signOut();
+    } catch (error) {
+      console.error("error signing out user", error);
+    }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -50,7 +63,7 @@ const Navbar = ({ user, handleSignOut }) => {
               </NavLink>
             </Nav.Item>
             <Nav.Item index="4">
-              <Button type="warning" onClick={handleSignOut}>
+              <Button type="warning" onClick={handleSignOutHere}>
                 Sign Out
               </Button>
             </Nav.Item>

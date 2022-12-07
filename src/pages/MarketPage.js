@@ -19,8 +19,9 @@ const MarketPage = ({ user, marketId }) => {
   const [isMarketOwner, setIsMarketOwner] = useState(false);
 
   useEffect(() => {
+    console.log(user);
     handleGetMarket();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     // console.log("Update market on useEffect");
@@ -120,6 +121,7 @@ const MarketPage = ({ user, marketId }) => {
     const marketData = result.data.getMarket;
     // const marketOwner = marketData.owner;
     setMarketOwner(marketData.owner);
+
     setMarket(result.data.getMarket);
 
     setIsLoading(false);
@@ -140,12 +142,14 @@ const MarketPage = ({ user, marketId }) => {
       // console.log(user.username);
       // console.log("isMarketOwner");
       // console.log(user.username === market.owner);
+      // console.log("isMarketOwner IN it");
+
       return user.username === marketOwner;
       // return user.username === market.owner;
       // console.log("isMarketOwner");
       // console.log(isMarketOwner);
     }
-    // console.log("isMarketOwner out of if");
+    console.log("isMarketOwner out of if");
     return false;
   };
 
@@ -157,7 +161,7 @@ const MarketPage = ({ user, marketId }) => {
       <Link className="link" to="/">
         Back to Markets List
       </Link>
-      {checkMarketOwner() && <p>OWNER</p>}
+      {checkMarketOwner() ? <p>OWNER</p> : <p>Not Owner</p>}
       <span className="items-center pt-2">
         <h2 className="mb-mr">{market.name}</h2> - {market.owner}
       </span>
@@ -168,8 +172,8 @@ const MarketPage = ({ user, marketId }) => {
         </span>
       </div>
       {/* New Product */}
-      <Tabs type="border-card" value={isMarketOwner ? "1" : "2"}>
-        {isMarketOwner && (
+      <Tabs type="border-card" value={checkMarketOwner() ? "1" : "2"}>
+        {checkMarketOwner() && (
           <Tabs.Pane
             label={
               <>
@@ -179,7 +183,7 @@ const MarketPage = ({ user, marketId }) => {
             }
             name="1"
           >
-            <NewProduct marketId={this.props.marketId} />
+            <NewProduct marketId={marketId} />
           </Tabs.Pane>
         )}
         {/* Products List */}

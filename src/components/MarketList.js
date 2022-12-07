@@ -31,8 +31,8 @@ const MarketList = ({ searchResults, searchTerm }) => {
 
         if (loading || !data.listMarkets) return <Loading fullscreen={true} />;
 
-        console.log("searchResults");
-        console.log(searchResults.length);
+        // console.log("searchResults");
+        // console.log(searchResults.length);
         const markets =
           searchResults.length > 0 ? searchResults : data.listMarkets.items;
 
