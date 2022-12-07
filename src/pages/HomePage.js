@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import NewMarket from "../components/NewMarket";
 import MarketList from "../components/MarketList";
+import { API, graphqlOperation } from "aws-amplify";
+import { searchMarkets } from "../graphql/queries";
 
 // class HomePage extends React.Component {
 const HomePage = () => {
@@ -18,9 +20,32 @@ const HomePage = () => {
     setSearchTerm("");
   };
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    console.log(searchTerm);
+  const handleSearch = async (event) => {
+    try {
+      event.preventDefault();
+      setIsSearching(true);
+      console.log(searchTerm);
+      const result = await API.graphql(
+        graphqlOperation(searchMarkets, {
+          filter: {
+            or: [
+              { name: { match: searchTerm } },
+              { owner: { match: searchTerm } },
+              { tags: { match: searchTerm } },
+            ],
+          },
+          sort: {
+            field: "createdAt",
+            direction: "desc",
+          },
+        })
+      );
+
+      setSearchResults(result.data.searchMarkets.items);
+      setIsSearching(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <>
@@ -31,7 +56,7 @@ const HomePage = () => {
         handleSearch={handleSearch}
         isSearching={isSearching}
       />
-      <MarketList />
+      <MarketList searchResults={searchResults} searchTerm={searchTerm} />
     </>
   );
 };

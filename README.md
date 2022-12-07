@@ -1,3 +1,7 @@
+## This Git 22.12
+
+https://github.com/samedan/22.11_amplify_marketplace
+
 # Initial Git 2021 amplifyagora
 
 https://github.com/samedan/amplifyagora
@@ -6,6 +10,7 @@ https://github.com/samedan/2110_aws_marketplace
 ## Getting started
 
 > Old Tranformer Graphql version
+> amplify/cli.json
 > "transformerversion": 1,
 > "useexperimentalpipelinedtransformer": false,
 > Old NodeJS (< version 17)
