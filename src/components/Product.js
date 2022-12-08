@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { S3Image } from "aws-amplify-react";
 // prettier-ignore
 import { Notification, Popover, Button, Dialog, Card, Form, Input, Radio } from "element-react";
@@ -8,14 +8,20 @@ import PayButton from "./PayButton";
 import EmailedIcon from "../assets/emailed.svg";
 import ShippedIcon from "../assets/shipped.svg";
 import { convertDollarsToCents } from "./../utils/index";
-import { updateProduct } from "./../graphql/mutations";
+import { updateProduct, deleteProduct } from "./../graphql/mutations";
 import { API, graphqlOperation } from "aws-amplify";
 
 const Product = ({ product }) => {
   const [updateProductDialog, setUpdateProductDialog] = useState(false);
+  const [deleteProductDialog, setDeleteProductDialog] = useState(false);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [shipped, setShipped] = useState(false);
+
+  useEffect(() => {
+    console.log("deleteProductDialog");
+    console.log(deleteProductDialog);
+  }, [deleteProductDialog]);
 
   const handleUpdateProduct = async (productId) => {
     try {
@@ -35,9 +41,36 @@ const Product = ({ product }) => {
         title: "Success",
         message: "Product succesfully updated",
         type: "success",
+        duration: 4000,
       });
+      // Reload
+      // setTimeout(() => window.location.reload(), 2000);
     } catch (error) {
       console.log("error updating product", error);
+    }
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    console.log(productId);
+    try {
+      const input = {
+        id: productId,
+      };
+      const result = await API.graphql(
+        graphqlOperation(deleteProduct, { input })
+      );
+      console.log(result);
+      setDeleteProductDialog(false);
+      Notification({
+        title: "Success",
+        message: "Product succesfully deleted",
+        type: "success",
+        duration: 4000,
+      });
+      // Reload
+      // setTimeout(() => window.location.reload(), 2000);
+    } catch (error) {
+      console.error(`Failed to dleete product with id: ${productId}`, error);
     }
   };
 
@@ -87,7 +120,42 @@ const Product = ({ product }) => {
                       setShipped(product.shipped);
                     }}
                   />
-                  <Button type="danger" icon="delete" />
+                  {/* Delete Button */}
+                  <Popover
+                    placement="top"
+                    width="160"
+                    trigger="click"
+                    visible={deleteProductDialog}
+                    content={
+                      <>
+                        <p>Do you want to delete this product?</p>
+                        <div className="text-right">
+                          <Button
+                            size="mini"
+                            type="text"
+                            className="m-1"
+                            onClick={() => setDeleteProductDialog(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="primary"
+                            size="mini"
+                            className="m-1"
+                            onClick={() => handleDeleteProduct(product.id)}
+                          >
+                            Confirm
+                          </Button>
+                        </div>
+                      </>
+                    }
+                  >
+                    <Button
+                      type="danger"
+                      icon="delete"
+                      onClick={() => setDeleteProductDialog(true)}
+                    />
+                  </Popover>
                 </>
               )}
             </div>
