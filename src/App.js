@@ -4,11 +4,14 @@ import { Auth, Hub, API, graphqlOperation } from "aws-amplify";
 import { getUser } from "./graphql/queries";
 import { registerUser } from "./graphql/mutations";
 import { AmplifyTheme, Authenticator } from "aws-amplify-react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Router, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import MarketPage from "./pages/MarketPage";
 import Navbar from "./components/Navbar";
+import createBrowserHistory from "history/createBrowserHistory";
+
+export const history = createBrowserHistory();
 
 export const UserContext = createContext();
 
@@ -112,7 +115,7 @@ const App = () => {
     <Authenticator />
   ) : (
     <UserContext.Provider value={{ user }}>
-      <Router>
+      <Router history={history}>
         <>
           {/* Navbar */}
           <Navbar user={user} handleSignout={handleSignout} />
