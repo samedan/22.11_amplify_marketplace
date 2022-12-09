@@ -66,6 +66,7 @@ const chargeHandler = async (req, res, next) => {
       if (charge.status === "succeeded") {
         req.charge = charge;
         req.description = description;
+        req.email = req.body.email; // coming from PayButton.js(handleCharge)
         req.amount = amount;
         req.currency = currency;
         next(); // send email
@@ -75,8 +76,16 @@ const chargeHandler = async (req, res, next) => {
   );
 };
 
+const convertCentsToDollars = (price) => (price / 100).toFixed(2);
+
 const emailHandler = async (req, res) => {
-  const { charge } = req;
+  const {
+    charge,
+    description,
+    email: { shipped, customerEmail, ownerEmail },
+    amount,
+    currency,
+  } = req;
   ses.sendEmail(
     {
       Source: config.adminEmail,
@@ -86,12 +95,38 @@ const emailHandler = async (req, res) => {
       },
       Message: {
         Subject: {
-          Data: "Order details - Amplify Markey",
+          Data: `Order details for ${description} - Amplify Market`,
         },
         Body: {
           Html: {
             Charset: "UTF-8",
-            Data: "<h3>Order Processed!</h3>",
+            Data: `<h3>Order Processed!</h3>
+            
+            <p><span style="font-weight: bold">${description}</span> - $${convertCentsToDollars(
+              charge.amount
+            )}</p>
+            <p>Customer email: <a href="mailto:${customerEmail}">${customerEmail}</a> </p>
+            <p>Contact your seller (ownerEmail): <a href="mailto:${ownerEmail}">${ownerEmail}</a> </p>
+            <hr>
+            ${
+              shipped
+                ? `<h4'>Mailing Address:</h4>
+              <p>${charge.source.name}</p>
+              <p>${charge.source.address_line1}</p>
+              <p>${charge.source.address_city}, ${charge.source.address_state} ${charge.source.address_zip}</p>
+              `
+                : "<h4>Emailed Product</h4>"
+            }
+            <p style="font-style: italic; color: grey">
+            ${
+              shipped
+                ? "<p>Your product will be shipped in 2-3 days.</p>"
+                : "<p>Check your verified Email address for your emailed product.</p>"
+            }
+            
+            </p>
+
+            `,
           },
         },
       },

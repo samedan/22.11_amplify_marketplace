@@ -1,6 +1,8 @@
 import React, { useEffect, useState, createContext } from "react";
 import "./App.css";
-import { Auth, Hub } from "aws-amplify";
+import { Auth, Hub, API, graphqlOperation } from "aws-amplify";
+import { getUser } from "./graphql/queries";
+import { registerUser } from "./graphql/mutations";
 import { AmplifyTheme, Authenticator } from "aws-amplify-react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
@@ -24,6 +26,8 @@ const App = () => {
       switch (event) {
         case "signIn":
           console.log("signed in");
+          // register new user data after the first Login (email verified)
+          registerNewUser(data);
           getUserData();
           break;
         case "signUp":
@@ -76,6 +80,33 @@ const App = () => {
   //       return;
   //   }
   // };
+
+  const registerNewUser = async (signInData) => {
+    const getUserInput = {
+      id: signInData.signInUserSession.idToken.payload.sub,
+    };
+    const { data } = await API.graphql(graphqlOperation(getUser, getUserInput));
+    console.log(data);
+    // if we cannot get a user (the user is a new one)
+    // REGISTER a NEW User
+    if (!data.getUser) {
+      try {
+        const registerUserInput = {
+          ...getUserInput,
+          username: signInData.username,
+          email: signInData.signInUserSession.idToken.payload.email,
+          registered: true,
+        };
+        const newUser = await API.graphql(
+          graphqlOperation(registerUser, { input: registerUserInput })
+        );
+        console.log("newUser");
+        console.log(newUser);
+      } catch (error) {
+        console.error("Error registering new user", error);
+      }
+    }
+  };
 
   return !user ? (
     <Authenticator />

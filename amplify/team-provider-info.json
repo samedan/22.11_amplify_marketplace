@@ -19,7 +19,7 @@
       "function": {
         "orderlambda": {
           "deploymentBucketName": "amplify-2211marketplace-dev-120648-deployment",
-          "s3Key": "amplify-builds/orderlambda-744d6247382b7a75714c-build.zip"
+          "s3Key": "amplify-builds/orderlambda-655178304671654e7553-build.zip"
         },
         "2212orderlambda": {
           "deploymentBucketName": "amplify-2211marketplace-dev-120648-deployment",
