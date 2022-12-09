@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "paths": {
+    "/charge": {
+      "name": "/charge",
+      "lambdaFunction": "orderlambda",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create"
+        ]
+      }
+    }
+  }
+}
