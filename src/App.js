@@ -9,7 +9,10 @@ import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import MarketPage from "./pages/MarketPage";
 import Navbar from "./components/Navbar";
-import createBrowserHistory from "history/createBrowserHistory";
+// import createBrowserHistory from "history/createBrowserHistory";
+import { createBrowserHistory } from "history";
+// import history from "history";
+// require("history").createBrowserHistory
 
 export const history = createBrowserHistory();
 
@@ -45,9 +48,9 @@ const App = () => {
       }
     });
 
-    Auth.currentAuthenticatedUser()
-      .then((currentUser) => setUser(currentUser))
-      .catch(() => console.log("Not signed in"));
+    // Auth.currentAuthenticatedUser()
+    //   .then((currentUser) => setUser(currentUser))
+    //   .catch(() => console.log("Not signed in"));
 
     return unsubscribe;
   }, []);
@@ -122,7 +125,10 @@ const App = () => {
           {/* Routes */}
           <div className="app-container">
             <Route path="/" exact component={HomePage} />
-            <Route path="/profile" component={ProfilePage} />
+            <Route
+              path="/profile"
+              component={() => <ProfilePage user={user} />}
+            />
             <Route
               path={`/markets/:marketId`}
               component={({ match }) => (

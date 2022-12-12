@@ -73,7 +73,7 @@ const PayButton = ({ product, user }) => {
           title: "Success",
           message: `${result.message}`,
           type: "success",
-          duration: 3000,
+          duration: 5000,
         });
         setTimeout(() => {
           history.push("/");
