@@ -4,20 +4,21 @@ import { NavLink } from "react-router-dom";
 import ReactLogo from "../assets/market.svg";
 import { Auth } from "aws-amplify";
 
-const Navbar = ({ user, handleSignOut }) => {
+const Navbar = ({ user, handleSignOut, userAttributes }) => {
   // console.log(handleSignOut);
   const [isLoading, setIsLoading] = useState(true);
   const [userEmail, setUserEmail] = useState("");
 
-  useEffect(() => {
-    const userAtributesconsole = user.result.attributes.email;
-    if (userAtributesconsole === undefined) {
-      setIsLoading(true);
-    } else {
-      setUserEmail(userAtributesconsole);
-      setIsLoading(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log(userAttributes);
+  //   // const userAtributesconsole = user.result.attributes.email;
+  //   // if (userAtributesconsole === undefined) {
+  //   //   setIsLoading(true);
+  //   // } else {
+  //   //   setUserEmail(userAtributesconsole);
+  //   //   setIsLoading(false);
+  //   // }
+  // }, [userAttributes]);
 
   const handleSignOutHere = async (e) => {
     e.preventDefault();
@@ -30,7 +31,9 @@ const Navbar = ({ user, handleSignOut }) => {
     }
   };
 
-  if (isLoading) {
+  console.log(userAttributes);
+
+  if (userAttributes === null) {
     return <Loading />;
   } else {
     return (
@@ -53,7 +56,8 @@ const Navbar = ({ user, handleSignOut }) => {
           <div className="nav-items">
             <Nav.Item index="2">
               <span className="app-user">
-                Hello, <strong>{userEmail}</strong>
+                {/* Hello, <strong>{userEmail}</strong> */}
+                Hello, <strong>{userAttributes.email}</strong>
               </span>
             </Nav.Item>
             <Nav.Item index="3">

@@ -20,6 +20,7 @@ export const UserContext = createContext();
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [userAttributes, setUserAttributes] = useState(null);
 
   useEffect(() => {
     // console.log(AmplifyTheme);
@@ -48,9 +49,9 @@ const App = () => {
       }
     });
 
-    // Auth.currentAuthenticatedUser()
-    //   .then((currentUser) => setUser(currentUser))
-    //   .catch(() => console.log("Not signed in"));
+    Auth.currentAuthenticatedUser()
+      .then((currentUser) => setUser(currentUser))
+      .catch(() => console.log("Not signed in"));
 
     return unsubscribe;
   }, []);
@@ -66,7 +67,17 @@ const App = () => {
 
   const getUserData = async () => {
     const result = await Auth.currentAuthenticatedUser();
-    result ? setUser({ result }) : setUser(null);
+    // result ? setUser({ result }) : setUser(null);
+
+    result ? setUser(getUserAttributes(result)) : setUser(null);
+  };
+
+  const getUserAttributes = async (authUserData) => {
+    const attributesArr = await Auth.userAttributes(authUserData);
+    // console.log(attributesArr);
+    const attributesObj = Auth.attributesToObject(attributesArr);
+    console.log(attributesObj);
+    setUserAttributes(attributesObj);
   };
 
   // const onHubCapsule = (capsule) => {
@@ -117,17 +128,23 @@ const App = () => {
   return !user ? (
     <Authenticator />
   ) : (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ user, userAttributes }}>
       <Router history={history}>
         <>
           {/* Navbar */}
-          <Navbar user={user} handleSignout={handleSignout} />
+          <Navbar
+            user={user}
+            userAttributes={userAttributes}
+            handleSignout={handleSignout}
+          />
           {/* Routes */}
           <div className="app-container">
             <Route path="/" exact component={HomePage} />
             <Route
               path="/profile"
-              component={() => <ProfilePage user={user} />}
+              component={() => (
+                <ProfilePage user={user} userAttributes={userAttributes} />
+              )}
             />
             <Route
               path={`/markets/:marketId`}
