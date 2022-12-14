@@ -1,0 +1,31 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-2211marketplace-dev-120648-authRole",
+      "UnauthRoleArn": "arn:aws:iam::453414768438:role/amplify-2211marketplace-dev-120648-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::453414768438:role/amplify-2211marketplace-dev-120648-authRole",
+      "Region": "eu-west-3",
+      "DeploymentBucketName": "amplify-2211marketplace-dev-120648-deployment",
+      "UnauthRoleName": "amplify-2211marketplace-dev-120648-unauthRole",
+      "StackName": "amplify-2211marketplace-dev-120648",
+      "StackId": "arn:aws:cloudformation:eu-west-3:453414768438:stack/amplify-2211marketplace-dev-120648/a6ce2b80-6fd5-11ed-b68c-0a1a1c84f736",
+      "AmplifyAppId": "d2m6c6g6v92jm1",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-2211marketplace-dev-120648-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "auth": {
+        "2211marketplace85cc4e92": {}
+      },
+      "function": {
+        "orderlambda": {
+          "deploymentBucketName": "amplify-2211marketplace-dev-120648-deployment",
+          "s3Key": "amplify-builds/orderlambda-655178304671654e7553-build.zip"
+        },
+        "2212orderlambda": {
+          "deploymentBucketName": "amplify-2211marketplace-dev-120648-deployment",
+          "s3Key": "amplify-builds/2212orderlambda-6754524a696346774c48-build.zip"
+        }
+      }
+    }
+  }
+}

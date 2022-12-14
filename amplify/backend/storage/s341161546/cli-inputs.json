@@ -1,0 +1,14 @@
+{
+  "resourceName": "s341161546",
+  "policyUUID": "41161546",
+  "bucketName": "2211marketplacee7d66d4e8b9c431d8cceaca21bef7e4c",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
