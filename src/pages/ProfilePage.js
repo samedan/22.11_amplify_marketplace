@@ -269,6 +269,7 @@ const ProfilePage = ({ user, userAttributes }) => {
                     </p>
                     <p>
                       <b>Purchased on</b>: {formatOrderDate( order.createdAt)}
+                      
                     </p>
                     {order.shippingAddress && (
                       <>

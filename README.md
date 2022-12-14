@@ -24,6 +24,7 @@ aws-exports.js
 > route to Profile page on every page
 > MARKET/PRODUCTS OWNER works only on reload
 
+
 ## Initial GraphQL Schema
 
 ## schema.graphql

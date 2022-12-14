@@ -207,6 +207,7 @@ const MarketPage = ({ user, marketId, userAttributes }) => {
         <span style={{ color: "var(--lightSquidInk)", paddingBottom: "1em" }}>
           <Icon name="date" className="icon" />
           {formatProductDate(market.createdAt)}
+          
         </span>
       </div>
       {/* New Product */}
