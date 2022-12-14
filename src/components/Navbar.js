@@ -55,15 +55,17 @@ const Navbar = ({ user, handleSignOut, userAttributes }) => {
           {/* Username */}
           <div className="nav-items">
             <Nav.Item index="2">
+            <NavLink to="/profile" className="nav-link">
               <span className="app-user">
                 {/* Hello, <strong>{userEmail}</strong> */}
                 Hello, <strong>{userAttributes.email}</strong>
               </span>
+              </NavLink>
             </Nav.Item>
             <Nav.Item index="3">
-              <NavLink to="profile" className="nav-link">
+              <NavLink to="/profile" className="nav-link">
                 <Icon name="setting" />
-                Profile
+                Profile/Orders
               </NavLink>
             </Nav.Item>
             <Nav.Item index="4">
