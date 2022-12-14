@@ -4,6 +4,7 @@ import { S3Image } from "aws-amplify-react";
 import { Notification, Popover, Button, Dialog, Card, Form, Input, Radio } from "element-react";
 import { convertCentsToDollars } from "../utils";
 import { UserContext } from "./../App";
+import { Link } from "react-router-dom";
 import PayButton from "./PayButton";
 import EmailedIcon from "../assets/emailed.svg";
 import ShippedIcon from "../assets/shipped.svg";
@@ -79,6 +80,7 @@ const Product = ({ product }) => {
       {({ user, userAttributes }) => {
         const isProductOwner =
           userAttributes && userAttributes.sub === product.owner;
+        const isEmailVerified = userAttributes && userAttributes.email_verified;
         return (
           <div className="card-container">
             <Card bodyStyle={{ padding: 0, minWidth: "200px" }}>
@@ -102,12 +104,24 @@ const Product = ({ product }) => {
                   <span className="mx-1">
                     ${convertCentsToDollars(product.price)}
                   </span>
-                  {!isProductOwner && (
-                    // PayButton
-                    <PayButton
-                      product={product}
-                      userAttributes={userAttributes}
-                    />
+                  <br />
+                  {isEmailVerified ? (
+                    !isProductOwner && (
+                      // PayButton
+                      <PayButton
+                        product={product}
+                        userAttributes={userAttributes}
+                      />
+                    )
+                  ) : (
+                    <Link
+                      to="/profile"
+                      className="link"
+                      style={{ textDecoration: "underline" }}
+                    >
+                      Verify email <br />
+                      to buy this product
+                    </Link>
                   )}
                 </div>
               </div>

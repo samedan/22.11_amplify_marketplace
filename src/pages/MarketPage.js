@@ -40,16 +40,17 @@ const getMarket = /* GraphQL */ `
   }
 `;
 
-const MarketPage = ({ user, marketId }) => {
+const MarketPage = ({ user, marketId, userAttributes }) => {
   const [market, setMarket] = useState(null);
   const [marketOwner, setMarketOwner] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isMarketOwner, setIsMarketOwner] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   useEffect(() => {
-    console.log(user);
+    // console.log(user);
     handleGetMarket();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     // Create
@@ -132,7 +133,13 @@ const MarketPage = ({ user, marketId }) => {
     return createProductListener.unsubscribe();
   }, []);
 
-  useEffect(() => {}, [market, isLoading, marketOwner]);
+  useEffect(() => {}, [
+    market,
+    isLoading,
+    marketOwner,
+    isEmailVerified,
+    checkEmailVerified,
+  ]);
 
   const handleGetMarket = async () => {
     const input = {
@@ -149,6 +156,7 @@ const MarketPage = ({ user, marketId }) => {
     setMarketOwner(marketData.owner);
 
     setMarket(result.data.getMarket);
+    checkEmailVerified();
 
     setIsLoading(false);
 
@@ -156,27 +164,18 @@ const MarketPage = ({ user, marketId }) => {
   };
 
   const checkMarketOwner = () => {
-    // const { user } = this.props;
-    // const { market } = this.state;
-
     if (user && marketOwner !== "") {
-      // this.setState({ isMarketOwner: user.username === market.owner });
-      // console.log("market.owner in CheckMarketOwner");
-      // console.log(marketOwner);
-
-      // console.log("user.username in CheckMarketOwner");
-      // console.log(user.username);
-      // console.log("isMarketOwner");
-      // console.log(user.username === market.owner);
-      // console.log("isMarketOwner IN it");
-
       return user.username === marketOwner;
-      // return user.username === market.owner;
-      // console.log("isMarketOwner");
-      // console.log(isMarketOwner);
     }
     console.log("isMarketOwner out of if");
     return false;
+  };
+
+  const checkEmailVerified = () => {
+    if (userAttributes) {
+      console.log(userAttributes);
+      setIsEmailVerified(userAttributes.email_verified);
+    }
   };
 
   // const { market, isLoading, isMarketOwner } = this.state;
@@ -221,7 +220,13 @@ const MarketPage = ({ user, marketId }) => {
             }
             name="1"
           >
-            <NewProduct marketId={marketId} />
+            {isEmailVerified ? (
+              <NewProduct marketId={marketId} />
+            ) : (
+              <Link to="/profile" className="header">
+                Verify your email before adding products
+              </Link>
+            )}
           </Tabs.Pane>
         )}
         {/* Products List */}

@@ -70,6 +70,8 @@ const ProfilePage = ({ user, userAttributes }) => {
       render: (row) => {
         switch (row.name) {
           case "Email":
+            console.log("userAttributes.email_verified");
+            console.log(userAttributes.email_verified);
             return (
               <Button
                 // onClick={() => handleChange({ emailDialog: true })}
@@ -77,16 +79,12 @@ const ProfilePage = ({ user, userAttributes }) => {
                 type="info"
                 size="small"
               >
-                Edit
+                Edit {!userAttributes.email_verified ? " / Verify email" : ""}
               </Button>
             );
           case "Delete Profile":
             return (
-              <Button
-                type="danger"
-                size="small"
-                // onClick={handleDeleteProfile}
-              >
+              <Button type="danger" size="small" onClick={handleDeleteProfile}>
                 Delete
               </Button>
             );
@@ -165,6 +163,35 @@ const ProfilePage = ({ user, userAttributes }) => {
         message: `${error.message} || "Error updating email"`,
       });
     }
+  };
+
+  const handleDeleteProfile = () => {
+    MessageBox.confirm(
+      "This will permanently delete your account, orders and products. Are you sure you want to continue?",
+      "Attention!",
+      {
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
+        type: "warning",
+      }
+    )
+      .then(async () => {
+        try {
+          await user.deleteUser(() => window.location.reload());
+          Message({
+            type: "info",
+            message: "Account deleted.",
+          });
+        } catch (error) {
+          console.error("error deleting account", error);
+        }
+      })
+      .catch(() => {
+        Message({
+          type: "info",
+          message: "Delete cancelled.",
+        });
+      });
   };
 
   console.log("orders on render");
@@ -273,7 +300,7 @@ const ProfilePage = ({ user, userAttributes }) => {
         >
           <Dialog.Body>
             <Form labelPosition="top">
-              <Form.Item label="Email">
+              <Form.Item label="Email (Edit or Verify email address)">
                 <Input value={email} onChange={(email) => setEmail(email)} />
               </Form.Item>
               {verificationForm && (
@@ -295,7 +322,7 @@ const ProfilePage = ({ user, userAttributes }) => {
                 Save
               </Button>
             )}
-            {verificationForm && (
+            {verificationCode && (
               <Button type="primary" onClick={() => handleVerifyEmail("email")}>
                 Submit
               </Button>
